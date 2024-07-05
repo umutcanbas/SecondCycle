@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "590868236496",
+    "project_id": "dukkan-7dec9",
+    "storage_bucket": "dukkan-7dec9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590868236496:android:1cb9689a6f51e4d4a736d5",
+        "android_client_info": {
+          "package_name": "com.dukkan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzkNVWpXE1AMQ5zz7KgXnubaVMpJepSe0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

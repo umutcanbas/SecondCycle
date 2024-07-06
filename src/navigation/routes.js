@@ -5,6 +5,9 @@ export const routes = {
   LOGIN: 'Login',
   SINGUP: 'SingUp',
   HOME: 'Home',
+  MAP:'Map',
+  MESSAGE:'Message',
+  PROFILE:'Profile'
 };
 
 export default routes;

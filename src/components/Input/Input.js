@@ -1,15 +1,16 @@
-import { StyleSheet, TextInput, View } from 'react-native';
-import React from 'react';
+import {View, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
 
-const Input = ({
-  value,
-  onChangeText,
-  placeholder,
-  isSecure,
-  placeholderTextColor,
-  maxLength,
-  keyboardType,
-}) => {
+import Eye from '../../assets/svg/eye-on.svg';
+import EyeClose from '../../assets/svg/eye-off.svg';
+
+const Input = ({value, onChangeText, placeholder, isSecure}) => {
+  const [secureText, setSecureText] = useState(isSecure);
+
+  const toggleSecureText = () => {
+    setSecureText(prev => !prev);
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -17,12 +18,18 @@ const Input = ({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={placeholderTextColor}
-        secureTextEntry={isSecure}
+        secureTextEntry={secureText}
         autoCapitalize="none"
-        maxLength={maxLength}
-        keyboardType={keyboardType}
       />
+      {isSecure && (
+        <TouchableOpacity onPress={toggleSecureText} style={styles.icon}>
+          {secureText ? (
+            <EyeClose width={24} height={24} />
+          ) : (
+            <Eye width={24} height={24} />
+          )}
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -31,9 +38,8 @@ export default Input;
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
     flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 14,
     marginBottom: 17,
     borderRadius: 4,
@@ -42,7 +48,10 @@ const styles = StyleSheet.create({
     height: 40,
   },
   input: {
-    width: '95%',
+    width: 300,
     marginLeft: 10,
+  },
+  icon: {
+    padding: 5,
   },
 });

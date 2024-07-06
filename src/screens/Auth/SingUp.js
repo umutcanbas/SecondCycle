@@ -1,53 +1,66 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
+  SafeAreaView,
   View,
   Text,
-  SafeAreaView,
   StyleSheet,
   TouchableOpacity,
-  Button,
 } from 'react-native';
 
 import routes from '../../navigation/routes';
+
 import Input from '../../components/Input/Input';
-import { showMessage } from 'react-native-flash-message';
+import Button from '../../components/Button/Button';
+
+import {showMessage} from 'react-native-flash-message';
+
 import auth from '@react-native-firebase/auth';
 
-const SignUp = ({ navigation }) => {
+import BackIcon from '../../assets/svg/arrow-left.svg';
+
+const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rePassword, setRePassword] = useState('');
 
   const onPressRegister = async () => {
+    if (password !== rePassword) {
+      showMessage({
+        message: 'Passwords do not match',
+        type: 'danger',
+      });
+      return;
+    }
     try {
       const response = await auth().createUserWithEmailAndPassword(
         email,
-        password
+        password,
       );
-      
-      // Başarılı kayıt durumunda
       showMessage({
         message: 'Successfully Created User',
         type: 'success',
       });
       navigation.navigate(routes.LOGIN);
     } catch (error) {
-      // Hata durumunda
       showMessage({
         message: 'Unexpected Error',
         description: error.message,
         type: 'danger',
       });
-      console.error('onPressRegister Error: ', error);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate(routes.LOGIN)}
-        style={styles.backIconContainer}
-      />
-      <Text style={styles.title}>Create Account</Text>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(routes.LOGIN)}
+          style={styles.backIconContainer}>
+          <BackIcon width={25} height={25} />
+        </TouchableOpacity>
+
+        <Text style={styles.title}>Create Account</Text>
+      </View>
 
       <View style={styles.innerContainer}>
         <Input
@@ -61,12 +74,20 @@ const SignUp = ({ navigation }) => {
           placeholder="Password"
           isSecure
         />
-
-        <Button
-          title="Register"
-          disabled={password === '' || email === ''}
-          onPress={onPressRegister}
+        <Input
+          value={rePassword}
+          onChangeText={setRePassword}
+          placeholder="Repassword"
+          isSecure
         />
+
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Register"
+            disabled={password === '' || email === ''}
+            onPress={onPressRegister}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -78,27 +99,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerContainer: {
+    width:450,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight:50,
+    marginTop:110,
+
   },
   backIconContainer: {
-    backgroundColor: 'grey',
     width: 30,
     height: 30,
+    borderWidth: 1,
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 63,
-    marginLeft: 27,
   },
   title: {
     color: 'black',
     fontSize: 32,
     fontWeight: '700',
-    marginTop: 20,
+    marginTop: 30,
     marginLeft: 27,
-    marginBottom: 32,
+    marginBottom: 30,
   },
   innerContainer: {
     flex: 1,
     marginHorizontal: 23,
+  },
+  buttonContainer: {
+    marginTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

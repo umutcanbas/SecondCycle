@@ -6,7 +6,7 @@ export const routes = {
   LOGIN: 'Login',
   SINGUP: 'SingUp',
   HOME: 'Home',
-  MAP:'Map',
+  NOTIFICATIONS:'Notifications',
   MESSAGE:'Message',
   PROFILE:'Profile'
 };

@@ -1,11 +1,10 @@
-import { View, Text } from 'react-native';
 import React from 'react';
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import SplashScreen from '../screens/Auth/SplashScreen';
 import Login from '../screens/Auth/Login';
-import SingUp from '../screens/Auth/SingUp';
+import SingUp from '../screens/Auth/SignUp';
 
 import routes from './routes';
 
@@ -20,7 +19,6 @@ const AuthNavigator = () => {
       <Stack.Screen name={routes.SPLASHSCREEN} component={SplashScreen} />
       <Stack.Screen name={routes.LOGIN} component={Login} />
       <Stack.Screen name={routes.SINGUP} component={SingUp} />
-   
     </Stack.Navigator>
   );
 };

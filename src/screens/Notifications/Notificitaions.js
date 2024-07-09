@@ -4,15 +4,15 @@ import ProductCard from '../../components/Products/ProductsCard'
 
 
 
-const Map = () => {
+const Notificaitons = () => {
   return (
     <View>
-      <Text>Map</Text>
+      <Text>Notificaitons</Text>
       <ProductCard/>
     </View>
   )
 }
 
-export default Map
+export default Notificaitons
 
 const styles = StyleSheet.create({})

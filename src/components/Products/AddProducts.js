@@ -4,6 +4,8 @@ import {View, TextInput, Button, StyleSheet} from 'react-native';
 
 import database from '@react-native-firebase/database';
 
+import {showMessage} from 'react-native-flash-message';
+
 const AddProducts = () => {
   const [productName, setProductName] = useState('');
   const [username, setUsername] = useState('');
@@ -27,19 +29,28 @@ const AddProducts = () => {
         .ref('/products')
         .push(newProduct)
         .then(() => {
-          console.log('Product added!');
           setProductName('');
           setUsername('');
           setDescription('');
           setLocation('');
           setPrice('');
           setImageUrl('');
+          showMessage({
+            message: 'Added',
+            type: 'succes',
+          });
         })
         .catch(error => {
-          console.error('Error adding product: ', error);
+          showMessage({
+            message: 'Fail',
+            type: 'error',
+          });
         });
     } else {
-      console.error('Please fill in all fields.');
+      showMessage({
+        message: 'Please fill in all fields.',
+        type: 'error',
+      });
     }
   };
 

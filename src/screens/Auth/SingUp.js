@@ -16,15 +16,24 @@ import {showMessage} from 'react-native-flash-message';
 
 import auth from '@react-native-firebase/auth';
 
+import authMessage from '../../utils/authErrorMessageParse';
+
 import BackIcon from '../../assets/svg/arrow-left.svg';
 
 const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
+  const [loading , setLoading] = useState(false)
 
   const onPressRegister = async () => {
-    if (password !== rePassword) {
+    if (email == '') {
+      showMessage({
+        message: 'Email required',
+        type: 'danger',
+      });
+      return;
+    } else if (password !== rePassword) {
       showMessage({
         message: 'Passwords do not match',
         type: 'danger',
@@ -32,21 +41,22 @@ const SignUp = ({navigation}) => {
       return;
     }
     try {
-      const response = await auth().createUserWithEmailAndPassword(
-        email,
-        password,
-      );
+      setLoading(true)
+      await auth().createUserWithEmailAndPassword(email, password);
       showMessage({
         message: 'Successfully Created User',
         type: 'success',
       });
-      navigation.navigate(routes.LOGIN);
+      await AsyncStorage.setItem('isLogged', 'true');
+
+      navigation.navigate(routes.TAB_NAVIGATOR);
     } catch (error) {
       showMessage({
-        message: 'Unexpected Error',
-        description: error.message,
+        message: authMessage(error.code),
         type: 'danger',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,6 +96,7 @@ const SignUp = ({navigation}) => {
             title="Register"
             disabled={password === '' || email === ''}
             onPress={onPressRegister}
+            loading={loading}
           />
         </View>
       </View>
@@ -103,13 +114,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerContainer: {
-    width:450,
+    width: 450,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight:50,
-    marginTop:110,
-
+    marginRight: 50,
+    marginTop: 110,
   },
   backIconContainer: {
     width: 30,

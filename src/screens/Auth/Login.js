@@ -5,7 +5,7 @@ import {showMessage} from 'react-native-flash-message';
 
 import auth from '@react-native-firebase/auth';
 
-/* import {useNavigation} from '@react-navigation/native'; */
+import authMessage from '../../utils/authErrorMessageParse';
 
 import routes from '../../navigation/routes';
 
@@ -13,16 +13,20 @@ import Input from '../../components/Input/Input';
 
 import Button from '../../components/Button/Button';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  /*  const navigation = useNavigation(); */
+  const [loading, setLoading] = useState(false);
 
-  const signUp = () => {
+  const goSignUp = () => {
     navigation.navigate(routes.SINGUP);
   };
 
-  const signIn = () => {
+  const signIn = async () => {
+    setLoading(true);
+
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
@@ -30,15 +34,16 @@ const Login = ({navigation}) => {
           message: 'Successfully Logged In',
           type: 'success',
         });
+        AsyncStorage.setItem('isLogged', true);
+
         navigation.navigate(routes.TAB_NAVIGATOR);
       })
       .catch(error => {
         showMessage({
-          message: 'Login Failed',
-          description: error.message,
+          message: authMessage(error.code),
           type: 'danger',
         });
-      });
+      }).finally(_ => setLoading(false))
   };
 
   return (
@@ -58,8 +63,8 @@ const Login = ({navigation}) => {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <Button title="Sign In" onPress={() => signIn()} />
-        <Button title="Create Account" onPress={() => signUp()} />
+        <Button title="Sign In" onPress={signIn} loading={loading} />
+        <Button title="Create Account" onPress={goSignUp} />
       </View>
     </SafeAreaView>
   );

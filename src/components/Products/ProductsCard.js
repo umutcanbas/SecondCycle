@@ -1,11 +1,30 @@
 import React, {useState, useEffect} from 'react';
-
-import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 
 import database from '@react-native-firebase/database';
 
+import {useNavigation} from '@react-navigation/native';
+import routes from '../../navigation/routes';
+
 const ProductCard = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const navigation = useNavigation();
+
+  const goProductDetails = () => {
+    navigation.navigate(routes.WITH_OUT_TAB, {
+      screen: routes.PRODUCT_DETAIL,
+    });
+  };
 
   useEffect(() => {
     const onValueChange = database()
@@ -19,25 +38,40 @@ const ProductCard = () => {
           });
         });
         setProducts(productsList);
+        setLoading(false);
       });
 
     return () => database().ref('/products').off('value', onValueChange);
   }, []);
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="black" />
+      </View>
+    );
+  }
+
   return (
     <FlatList
       data={products}
+      numColumns={2}
       renderItem={({item}) => (
-        <View style={styles.productContainer}>
-          {item.imageUrl?.length > 10 ? (
-            <Image source={{uri: item.imageUrl}} style={styles.image} />
-          ) : null}
+        <TouchableOpacity
+          onPress={goProductDetails}
+          activeOpacity={0.6}
+          style={styles.productContainer}>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              source={require('../../assets/png/ProductDefault.png')}
+            />
+          </View>
+
           <Text style={styles.productName}>{item.name}</Text>
-          <Text>{item.username}</Text>
-          <Text>{item.description}</Text>
-          <Text>{item.location}</Text>
-          <Text>{item.price}</Text>
-        </View>
+          <Text style={styles.userName}>{item.username}</Text>
+          <Text style={styles.price}>$ {item.price}</Text>
+        </TouchableOpacity>
       )}
       keyExtractor={item => item.key}
     />
@@ -45,20 +79,44 @@ const ProductCard = () => {
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   productContainer: {
-    marginBottom: 20,
+    margin: 15,
     padding: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-    backgroundColor: '#f9f9f9',
+    borderWidth: 0.2,
+    borderRadius: 15,
+    borderColor: 'black',
+    width: 170,
+    height: 160,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageContainer: {
+    padding: 10,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
   },
   productName: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
+    color: 'black',
+  },
+  userName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: 'black',
+  },
+  price: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: 'black',
   },
 });
 

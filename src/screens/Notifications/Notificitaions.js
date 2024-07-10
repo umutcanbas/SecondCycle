@@ -1,18 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import ProductCard from '../../components/Products/ProductsCard'
-
-
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import ProductCard from '../../components/Products/ProductsCard';
 
 const Notificaitons = () => {
   return (
-    <View>
+    <SafeAreaView style={styles.container}>
       <Text>Notificaitons</Text>
-      <ProductCard/>
-    </View>
-  )
-}
+    </SafeAreaView>
+  );
+};
 
-export default Notificaitons
+export default Notificaitons;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

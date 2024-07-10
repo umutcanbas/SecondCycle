@@ -9,8 +9,8 @@ import {
 
 import routes from '../../navigation/routes';
 
-import Input from '../../components/Input/Input';
-import Button from '../../components/Button/Button';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 import {showMessage} from 'react-native-flash-message';
 

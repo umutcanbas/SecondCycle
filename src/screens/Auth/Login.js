@@ -9,9 +9,9 @@ import authMessage from '../../utils/authErrorMessageParse';
 
 import routes from '../../navigation/routes';
 
-import Input from '../../components/Input/Input';
+import Input from '../../components/Input';
 
-import Button from '../../components/Button/Button';
+import Button from '../../components/Button';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -34,7 +34,7 @@ const Login = ({navigation}) => {
           message: 'Successfully Logged In',
           type: 'success',
         });
-        AsyncStorage.setItem('isLogged', true);
+        AsyncStorage.setItem('isLogged', 'true');
 
         navigation.navigate(routes.TAB_NAVIGATOR);
       })
@@ -43,13 +43,12 @@ const Login = ({navigation}) => {
           message: authMessage(error.code),
           type: 'danger',
         });
-      }).finally(_ => setLoading(false))
+      })
+      .finally(_ => setLoading(false));
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Second Cycle</Text>
-
       <Text style={styles.title}>Login </Text>
 
       <View style={styles.innerContainer}>
@@ -76,13 +75,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    marginBottom:290
   },
-  header: {
-    fontWeight: '650',
-    fontSize: 50,
-    color: 'black',
-    marginBottom: 110,
-  },
+
   title: {
     color: 'black',
     fontSize: 32,

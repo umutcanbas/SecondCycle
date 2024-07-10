@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import AuthNavigator from './AuthNavigator';
 import TabNavigator from './TabNavigator';
+import WithOutTab from './WithOutTab';
 
 
 import routes from './routes';
@@ -25,6 +26,10 @@ const RootNavigator = () => {
         }}>
         <Stack.Screen name={routes.AUTH_NAVIGATOR} component={AuthNavigator} />
         <Stack.Screen name={routes.TAB_NAVIGATOR} component={TabNavigator} />
+        <Stack.Screen
+          name={routes.WITH_OUT_TAB}
+          component={WithOutTab}
+        />
       </Stack.Navigator>
       <FlashMessage position="top" />
     </NavigationContainer>

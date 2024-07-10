@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 
-import {View, TextInput, Button, StyleSheet} from 'react-native';
+import {View, TextInput, StyleSheet} from 'react-native';
 
 import database from '@react-native-firebase/database';
+
+import Button from '../Button';
 
 import {showMessage} from 'react-native-flash-message';
 
@@ -12,17 +14,15 @@ const AddProducts = () => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [location, setLocation] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
 
   const AddProduct = () => {
-    if (productName && username && description && price && imageUrl) {
+    if (productName && username && description && price) {
       const newProduct = {
         name: productName,
         username,
         description,
         price,
         location,
-        imageUrl,
       };
 
       database()
@@ -34,10 +34,9 @@ const AddProducts = () => {
           setDescription('');
           setLocation('');
           setPrice('');
-          setImageUrl('');
           showMessage({
             message: 'Added',
-            type: 'succes',
+            type: 'success',
           });
         })
         .catch(error => {
@@ -87,12 +86,7 @@ const AddProducts = () => {
         onChangeText={setLocation}
         style={styles.input}
       />
-      <TextInput
-        placeholder="Image URL"
-        value={imageUrl}
-        onChangeText={setImageUrl}
-        style={styles.input}
-      />
+
       <View style={styles.buttonContainer}>
         <Button title="Add Product" onPress={AddProduct} />
       </View>
@@ -113,6 +107,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginVertical: 20,
+    alignItems: 'center',
   },
 });
 

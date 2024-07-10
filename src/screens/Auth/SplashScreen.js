@@ -4,6 +4,7 @@ import React, {useEffect} from 'react';
 import routes from '../../navigation/routes';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Header from '../../components/Header';
 
 const SplashScreen = ({navigation}) => {
   let isLogged = false;
@@ -25,7 +26,7 @@ const SplashScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.content}>
-      <Text style={styles.header}>Second Cycle</Text>
+     <Header/>
     </SafeAreaView>
   );
 };

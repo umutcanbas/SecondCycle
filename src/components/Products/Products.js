@@ -14,16 +14,39 @@ import database from '@react-native-firebase/database';
 import {useNavigation} from '@react-navigation/native';
 import routes from '../../navigation/routes';
 
-const ProductCard = () => {
+const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const navigation = useNavigation();
 
-  const goProductDetails = () => {
+  const goProductDetails = product => {
     navigation.navigate(routes.WITH_OUT_TAB, {
       screen: routes.PRODUCT_DETAIL,
+      params: {
+        product,
+      },
     });
+  };
+
+  const RenderItem = ({item}) => {
+    return (
+      <TouchableOpacity
+        onPress={() => goProductDetails(item)}
+        activeOpacity={0.6}
+        style={styles.productContainer}>
+        <View style={styles.imageContainer}>
+          <Image
+            style={styles.image}
+            source={require('../../assets/png/ProductDefault.png')}
+          />
+        </View>
+
+        <Text style={styles.productName}>{item.name}</Text>
+        <Text style={styles.userName}>{item.username}</Text>
+        <Text style={styles.price}>$ {item.price}</Text>
+      </TouchableOpacity>
+    );
   };
 
   useEffect(() => {
@@ -56,23 +79,7 @@ const ProductCard = () => {
     <FlatList
       data={products}
       numColumns={2}
-      renderItem={({item}) => (
-        <TouchableOpacity
-          onPress={goProductDetails}
-          activeOpacity={0.6}
-          style={styles.productContainer}>
-          <View style={styles.imageContainer}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/png/ProductDefault.png')}
-            />
-          </View>
-
-          <Text style={styles.productName}>{item.name}</Text>
-          <Text style={styles.userName}>{item.username}</Text>
-          <Text style={styles.price}>$ {item.price}</Text>
-        </TouchableOpacity>
-      )}
+      renderItem={({item}) => <RenderItem item={item} />}
       keyExtractor={item => item.key}
     />
   );
@@ -116,8 +123,8 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 15,
     fontWeight: '600',
-    color: 'black',
+    color: 'green',
   },
 });
 
-export default ProductCard;
+export default Products;

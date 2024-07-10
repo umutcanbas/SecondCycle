@@ -5,7 +5,7 @@ import AddProducts from '../Products/AddProducts';
 
 const deviceSize = Dimensions.get('window');
 
-const ContentInputModal = ({visible, onClose, onSend}) => {
+const ContentInputModal = ({visible, onClose}) => {
   return (
     <Modal
       style={styles.modal}
@@ -17,7 +17,7 @@ const ContentInputModal = ({visible, onClose, onSend}) => {
       <View style={styles.container}>
         <View style={styles.line} />
         <View style={styles.input_container}>
-          <AddProducts />
+          <AddProducts onClose={onClose} />
         </View>
       </View>
     </Modal>

@@ -1,6 +1,6 @@
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import ProductCard from '../../components/Products/ProductsCard';
+import ProductCard from '../../components/Products/Products';
 
 const Notificaitons = () => {
   return (

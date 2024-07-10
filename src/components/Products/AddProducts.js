@@ -8,7 +8,7 @@ import Button from '../Button';
 
 import {showMessage} from 'react-native-flash-message';
 
-const AddProducts = () => {
+const AddProducts = ({onClose}) => {
   const [productName, setProductName] = useState('');
   const [username, setUsername] = useState('');
   const [description, setDescription] = useState('');
@@ -38,6 +38,7 @@ const AddProducts = () => {
             message: 'Added',
             type: 'success',
           });
+          onClose();
         })
         .catch(error => {
           showMessage({
@@ -71,7 +72,7 @@ const AddProducts = () => {
         placeholder="Description"
         value={description}
         onChangeText={setDescription}
-        style={styles.input}
+        style={{...styles.input, height: 70}}
       />
       <TextInput
         placeholder="Price"

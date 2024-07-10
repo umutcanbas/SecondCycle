@@ -10,7 +10,7 @@ import routes from '../../navigation/routes';
 const Profile = ({navigation}) => {
   const logOut = async () => {
     try {
-      await AsyncStorage.removeItem('isLogged' );
+      await AsyncStorage.removeItem('isLogged');
       console.log('User logged out');
       navigation.navigate(routes.LOGIN);
     } catch (error) {
@@ -22,7 +22,7 @@ const Profile = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <Text>Profile</Text>
       <View style={styles.buttonContainer}>
-        <Button title="Log Out" onPress={() => logOut()} style={styles.button} />
+        <Button title="Log Out" onPress={() => logOut()} />
       </View>
     </SafeAreaView>
   );
@@ -40,7 +40,4 @@ const styles = StyleSheet.create({
     bottom: 20,
     right: 125,
   },
-  button:{
-    backgroundColor:'red'
-  }
 });

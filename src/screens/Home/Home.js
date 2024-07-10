@@ -6,7 +6,7 @@ import Searchbar from '../../components/Searchbar';
 
 import Button from '../../components/Button';
 import Header from '../../components/Header';
-import ProductCard from '../../components/Products/ProductsCard';
+import Products from '../../components/Products/Products';
 
 const Home = () => {
   const [inputModalVisible, setInputModalVisible] = useState(false);
@@ -21,11 +21,12 @@ const Home = () => {
 
       <Searchbar />
 
-      <ProductCard />
+      <Products />
 
       <Button
         style={styles.modalButton}
-        title="Add Product"
+        textColor="white"
+        title="Sell Product"
         onPress={handleInputToggle}
       />
       <Modal visible={inputModalVisible} onClose={handleInputToggle} />
@@ -39,12 +40,11 @@ const styles = StyleSheet.create({
   contaier: {
     flex: 1,
     backgroundColor: 'white',
-
   },
-
   modalButton: {
     position: 'absolute',
     right: 15,
     bottom: 35,
+    backgroundColor: 'black',
   },
 });

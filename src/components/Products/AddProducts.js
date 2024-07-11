@@ -1,25 +1,30 @@
-import React, {useState} from 'react';
-
-import {View, TextInput, StyleSheet} from 'react-native';
-
+import React, { useEffect, useState } from 'react';
+import { View, TextInput, StyleSheet } from 'react-native';
 import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
+import Button from '../Button/Button';
+import { showMessage } from 'react-native-flash-message';
 
-import Button from '../Button';
-
-import {showMessage} from 'react-native-flash-message';
-
-const AddProducts = ({onClose}) => {
+const AddProducts = ({ onClose }) => {
   const [productName, setProductName] = useState('');
-  const [username, setUsername] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [location, setLocation] = useState('');
+  const [userId, setUserId] = useState(null);
+
+
+  useEffect(() => {
+    const user = auth().currentUser;
+    if (user) {
+      setUserId(user.uid);
+    }
+  }, []);
 
   const AddProduct = () => {
-    if (productName && username && description && price) {
+    if (productName && description && price && userId) {
       const newProduct = {
         name: productName,
-        username,
+        userId, 
         description,
         price,
         location,
@@ -30,7 +35,6 @@ const AddProducts = ({onClose}) => {
         .push(newProduct)
         .then(() => {
           setProductName('');
-          setUsername('');
           setDescription('');
           setLocation('');
           setPrice('');
@@ -63,16 +67,10 @@ const AddProducts = ({onClose}) => {
         style={styles.input}
       />
       <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        style={styles.input}
-      />
-      <TextInput
         placeholder="Description"
         value={description}
         onChangeText={setDescription}
-        style={{...styles.input, height: 70}}
+        style={{ ...styles.input, height: 70 }}
       />
       <TextInput
         placeholder="Price"

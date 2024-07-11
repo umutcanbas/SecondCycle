@@ -10,7 +10,8 @@ import {
 import routes from '../../navigation/routes';
 
 import Input from '../../components/Input';
-import Button from '../../components/Button';
+import Button from '../../components/Button/Button';
+import BackButton from '../../components/Button/BackButton';
 
 import {showMessage} from 'react-native-flash-message';
 
@@ -18,13 +19,12 @@ import auth from '@react-native-firebase/auth';
 
 import authMessage from '../../utils/authErrorMessageParse';
 
-import BackIcon from '../../assets/svg/arrow-left.svg';
 
 const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
-  const [loading , setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const onPressRegister = async () => {
     if (email == '') {
@@ -41,7 +41,7 @@ const SignUp = ({navigation}) => {
       return;
     }
     try {
-      setLoading(true)
+      setLoading(true);
       await auth().createUserWithEmailAndPassword(email, password);
       showMessage({
         message: 'Successfully Created User',
@@ -63,12 +63,7 @@ const SignUp = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate(routes.LOGIN)}
-          style={styles.backIconContainer}>
-          <BackIcon width={25} height={25} />
-        </TouchableOpacity>
-
+        <BackButton />
         <Text style={styles.title}>Create Account</Text>
       </View>
 
@@ -121,14 +116,7 @@ const styles = StyleSheet.create({
     marginRight: 50,
     marginTop: 110,
   },
-  backIconContainer: {
-    width: 30,
-    height: 30,
-    borderWidth: 1,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   title: {
     color: 'black',
     fontSize: 32,

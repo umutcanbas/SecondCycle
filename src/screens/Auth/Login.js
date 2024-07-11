@@ -11,7 +11,7 @@ import routes from '../../navigation/routes';
 
 import Input from '../../components/Input';
 
-import Button from '../../components/Button';
+import Button from '../../components/Button/Button';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

@@ -76,29 +76,36 @@ const Products = () => {
   }
 
   return (
-    <FlatList
-      data={products}
-      numColumns={2}
-      renderItem={({item}) => <RenderItem item={item} />}
-      keyExtractor={item => item.key}
-    />
+    <View style={styles.container}>
+      <FlatList
+        data={products}
+        numColumns={2}
+        renderItem={({item}) => <RenderItem item={item} />}
+        keyExtractor={item => item.key}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   productContainer: {
-    margin: 15,
+    margin: 8,
     padding: 10,
     borderWidth: 0.2,
     borderRadius: 15,
     borderColor: 'black',
     width: 170,
-    height: 160,
+    height: 180,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import Modal from '../../components/Modal/AddProductModal';
 import Searchbar from '../../components/Searchbar';
 
-import Button from '../../components/Button';
+import Button from '../../components/Button/Button';
 import Header from '../../components/Header';
 import Products from '../../components/Products/Products';
 

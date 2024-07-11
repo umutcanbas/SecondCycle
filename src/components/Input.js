@@ -20,6 +20,7 @@ const Input = ({value, onChangeText, placeholder, isSecure}) => {
         placeholder={placeholder}
         secureTextEntry={secureText}
         autoCapitalize="none"
+        autoCorrect={false}
       />
       {isSecure && (
         <TouchableOpacity onPress={toggleSecureText} style={styles.icon}>

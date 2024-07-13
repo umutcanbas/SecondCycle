@@ -36,7 +36,7 @@ const Login = ({navigation}) => {
         });
         AsyncStorage.setItem('isLogged', 'true');
 
-        navigation.navigate(routes.TAB_NAVIGATOR);
+        navigation.navigate(routes.INFO);
       })
       .catch(error => {
         showMessage({
@@ -49,7 +49,7 @@ const Login = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Login </Text>
+      <Text style={styles.title}>Login</Text>
 
       <View style={styles.innerContainer}>
         <Input value={email} onChangeText={setEmail} placeholder="Email" />

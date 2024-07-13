@@ -4,8 +4,9 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 import routes from '../../navigation/routes';
 
@@ -18,7 +19,6 @@ import {showMessage} from 'react-native-flash-message';
 import auth from '@react-native-firebase/auth';
 
 import authMessage from '../../utils/authErrorMessageParse';
-
 
 const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -47,14 +47,15 @@ const SignUp = ({navigation}) => {
         message: 'Successfully Created User',
         type: 'success',
       });
-      await AsyncStorage.setItem('isLogged', 'true');
+      await AsyncStorage.setItem('isLogged', 'true'); 
 
-      navigation.navigate(routes.TAB_NAVIGATOR);
+      navigation.navigate(routes.INFO);
     } catch (error) {
       showMessage({
         message: authMessage(error.code),
         type: 'danger',
       });
+      console.log(error)
     } finally {
       setLoading(false);
     }

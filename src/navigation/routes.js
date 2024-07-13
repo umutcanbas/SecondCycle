@@ -5,11 +5,13 @@ export const routes = {
   SPLASHSCREEN: 'SplashScreen',
   LOGIN: 'Login',
   SINGUP: 'SingUp',
+  INFO:'Info',
   HOME: 'Home',
   NOTIFICATIONS: 'Notifications',
   MESSAGE: 'Message',
   PROFILE: 'Profile',
   PRODUCT_DETAIL: 'ProductDetail',
+  ADDRESS:'Address'
 };
 
 export default routes;

@@ -1,10 +1,10 @@
-import {View, Text} from 'react-native';
 import React from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import routes from './routes';
 
 import ProductDetail from '../screens/Home/ProductDetail';
+import Address from '../screens/Profile/Address';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +15,7 @@ const WithOutTab = () => {
         headerShown: false,
       }}>
       <Stack.Screen name={routes.PRODUCT_DETAIL} component={ProductDetail} />
+      <Stack.Screen name={routes.ADDRESS} component={Address} />
     </Stack.Navigator>
   );
 };

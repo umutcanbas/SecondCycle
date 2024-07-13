@@ -1,16 +1,62 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image, SafeAreaView, ScrollView} from 'react-native';
-
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  ScrollView,
+} from 'react-native';
 import Button from '../../components/Button/Button';
 import BackButton from '../../components/Button/BackButton';
+import database from '@react-native-firebase/database';
 
 const ProductDetail = ({route}) => {
   const product = route.params.product;
 
   const [productID, setProductID] = useState('');
   const [userID, setUserID] = useState('');
+  const [address, setAddress] = useState('');
+  const [userName, setUserName] = useState('');
 
+  const getUserData = () => {
+    const userId = product?.userId;
+    if (userId) {
+      setUserID(userId);
 
+      // Address
+      database()
+        .ref(`/users/${userId}/address`)
+        .once('value')
+        .then(snapshot => {
+          if (snapshot.exists()) {
+            setAddress(snapshot.val());
+          } else {
+            setAddress('No address found.');
+          }
+        })
+        .catch(error => {
+          alert('Failed to fetch address.');
+        });
+
+      // user
+      database()
+        .ref(`/users/${userId}/username`)
+        .once('value')
+        .then(snapshot => {
+          if (snapshot.exists()) {
+            setUserName(snapshot.val());
+          } else {
+            setUserName('No user found.');
+          }
+        })
+        .catch(error => {
+          alert('Failed to fetch user name.');
+        });
+    } else {
+      alert('User ID not found.');
+    }
+  };
 
   const getProductID = () => {
     const array = product.key.split('');
@@ -21,16 +67,7 @@ const ProductDetail = ({route}) => {
 
   useEffect(() => {
     getProductID();
-  }, []);
-
-  const getUserID = () => {
-    const array = product.userId.split('');
-    const lastElements = array.slice(-8);
-    const userIDString = lastElements.join('');
-    setUserID(userIDString);
-  };
-  useEffect(() => {
-    getUserID();
+    getUserData();
   }, []);
 
   if (!product) {
@@ -56,21 +93,21 @@ const ProductDetail = ({route}) => {
       <View style={styles.content}>
         <View>
           <Text style={styles.title}>Ad Number</Text>
-          <Text style={styles.title}>Seller ID</Text>
+          <Text style={styles.title}>Seller Name</Text>
           <Text style={styles.title}>Location</Text>
           <Text style={styles.title}>Price</Text>
         </View>
 
         <View>
           <Text style={styles.productID}>{productID}</Text>
-          <Text style={styles.comment}>{userID}</Text>
-          <Text style={styles.comment}>{product?.location}</Text>
+          <Text style={styles.comment}>{userName}</Text>
+          <Text style={styles.address}>{address}</Text>
           <Text style={styles.price}>{product?.price} $</Text>
         </View>
       </View>
 
+      <Text style={styles.detailHeaderText}>Details</Text>
       <ScrollView style={styles.detailContainer}>
-        <Text style={styles.detailHeaderText}>Details</Text>
         <Text style={styles.detailText}>{product?.description}</Text>
       </ScrollView>
 
@@ -134,6 +171,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: 'green',
+    margin: 5,
+  },
+  address: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'black',
     margin: 5,
   },
   detailContainer: {

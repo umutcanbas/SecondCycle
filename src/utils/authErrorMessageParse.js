@@ -3,7 +3,7 @@ export default function (errorCode) {
       case 'auth/invalid-email':
         return 'Invalid email';
   
-      case 'auth/email-already-exist':
+      case 'auth/auth/email-already-in-use':
         return 'Email address already registered';
   
       case 'auth/user-not-found':

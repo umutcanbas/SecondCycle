@@ -1,5 +1,5 @@
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -13,9 +13,11 @@ import routes from '../../navigation/routes';
 const Profile = ({navigation}) => {
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState('');
+  const [userProductCount, setUserProductCount] = useState(0);
 
   const logOut = async () => {
     try {
+      await auth().signOut();
       await AsyncStorage.removeItem('isLogged');
       console.log('User logged out');
       navigation.navigate(routes.LOGIN);
@@ -31,35 +33,56 @@ const Profile = ({navigation}) => {
   };
 
   useEffect(() => {
-    const user = auth().currentUser;
-    if (user) {
-      setUserId(user.uid);
-      database()
-        .ref(`/users/${user.uid}/username`)
-        .once('value')
-        .then(snapshot => {
-          if (snapshot.exists()) {
-            setUserName(snapshot.val());
+    const fetchUserDataAndProductCount = async () => {
+      const user = auth().currentUser;
+      if (user) {
+        setUserId(user.uid);
+
+        try {
+          // user
+          const usernameSnapshot = await database()
+            .ref(`/users/${user.uid}/username`)
+            .once('value');
+          if (usernameSnapshot.exists()) {
+            setUserName(usernameSnapshot.val());
           } else {
             setUserName('No username found');
           }
-        })
-        .catch(error => {
-          console.error('Failed to fetch username:', error);
-        });
-    }
+          //product
+          const productRef = database()
+            .ref('/products')
+            .orderByChild('userId')
+            .equalTo(user.uid);
+          productRef.on('value', snapshot => {
+            if (snapshot.exists()) {
+              setUserProductCount(snapshot.numChildren());
+            } else {
+              setUserProductCount(0);
+            }
+          });
+
+          return () => {
+            productRef.off();
+          };
+        } catch (error) {
+          console.error('Failed to fetch user data or product count:', error);
+        }
+      }
+    };
+
+    fetchUserDataAndProductCount();
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <Text>Profile</Text>
-      <Button title="Address" onPress={() => goAddress()} />
-
+      <Button title="Address" onPress={goAddress} />
 
       <Text>Username: {userName}</Text>
+      <Text>Products: {userProductCount}</Text>
 
       <View style={styles.buttonContainer}>
-        <Button title="Log Out" onPress={() => logOut()} />
+        <Button title="Log Out" onPress={logOut} textColor="red" />
       </View>
     </SafeAreaView>
   );
@@ -71,6 +94,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonContainer: {
     position: 'absolute',

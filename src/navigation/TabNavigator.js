@@ -13,8 +13,6 @@ import HomeIcon from '../assets/svg/home-line.svg';
 import HomeFullIcon from '../assets/svg/home-fill.svg';
 import ProfileIcon from '../assets/svg/user-line.svg';
 import ProfileFullIcon from '../assets/svg/user-fill.svg';
-import MapIcon from '../assets/svg/map-line.svg';
-import MapFullIcon from '../assets/svg/map-fill.svg';
 import MessageIcon from '../assets/svg/chat-line.svg';
 import MessageFullIcon from '../assets/svg/chat-fill.svg';
 
@@ -44,7 +42,7 @@ const TabNavigator = () => {
         tabBarStyle: {
           borderColor: 'white',
         },
-        tabBarIcon: ({focused, color, size}) => {
+        tabBarIcon: ({focused}) => {
           let Icon;
 
           if (route.name === routes.HOME) {

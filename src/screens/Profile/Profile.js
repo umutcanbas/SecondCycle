@@ -12,7 +12,7 @@ import routes from '../../navigation/routes';
 
 const Profile = ({navigation}) => {
   const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState('');
+  const [user, setUser] = useState('');
   const [userProductCount, setUserProductCount] = useState(0);
 
   const logOut = async () => {
@@ -41,12 +41,12 @@ const Profile = ({navigation}) => {
         try {
           // user
           const usernameSnapshot = await database()
-            .ref(`/users/${user.uid}/username`)
+            .ref(`/users/${user.uid}`)
             .once('value');
           if (usernameSnapshot.exists()) {
-            setUserName(usernameSnapshot.val());
+            setUser(usernameSnapshot.val());
           } else {
-            setUserName('No username found');
+            setUser('No username found');
           }
           //product
           const productRef = database()
@@ -78,7 +78,7 @@ const Profile = ({navigation}) => {
       <Text>Profile</Text>
       <Button title="Address" onPress={goAddress} />
 
-      <Text>Username: {userName}</Text>
+      <Text>Username: {user.username}</Text>
       <Text>Products: {userProductCount}</Text>
 
       <View style={styles.buttonContainer}>

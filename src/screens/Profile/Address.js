@@ -9,7 +9,7 @@ import Button from '../../components/Button/Button';
 import BackButton from '../../components/Button/BackButton';
 
 const Address = () => {
-  const [address, setAddress] = useState('');
+  const [user, setUser] = useState('');
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -17,11 +17,11 @@ const Address = () => {
     if (user) {
       setUserId(user.uid);
       database()
-        .ref(`/users/${user.uid}/address`)
+        .ref(`/users/${user.uid}`)
         .once('value')
         .then(snapshot => {
           if (snapshot.exists()) {
-            setAddress(snapshot.val());
+            setUser(snapshot.val());
           }
         });
     }
@@ -31,7 +31,7 @@ const Address = () => {
     if (userId) {
       database()
         .ref(`/users/${userId}/address`)
-        .set(address)
+        .set(user)
         .then(() => {
           alert('Address saved successfully.');
         })
@@ -48,8 +48,8 @@ const Address = () => {
       <Input
         style={styles.input}
         placeholder="Enter your address"
-        value={address}
-        onChangeText={setAddress}
+        value={user}
+        onChangeText={setUser}
       />
       <Button title="Save Address" onPress={saveAddress} />
     </SafeAreaView>

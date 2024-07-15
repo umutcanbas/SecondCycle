@@ -14,59 +14,29 @@ import database from '@react-native-firebase/database';
 const ProductDetail = ({route}) => {
   const product = route.params.product;
 
-  const [productID, setProductID] = useState('');
-  const [userID, setUserID] = useState('');
-  const [address, setAddress] = useState('');
-  const [userName, setUserName] = useState('');
+  const [user, setUser] = useState({});
 
   const getUserData = () => {
     const userId = product?.userId;
+    
     if (userId) {
-      setUserID(userId);
-
-      // Address
       database()
-        .ref(`/users/${userId}/address`)
+        .ref(`/users/${userId}`)
         .once('value')
         .then(snapshot => {
           if (snapshot.exists()) {
-            setAddress(snapshot.val());
-          } else {
-            setAddress('No address found.');
+            setUser(snapshot.val());
           }
         })
         .catch(error => {
           alert('Failed to fetch address.');
-        });
-
-      // user
-      database()
-        .ref(`/users/${userId}/username`)
-        .once('value')
-        .then(snapshot => {
-          if (snapshot.exists()) {
-            setUserName(snapshot.val());
-          } else {
-            setUserName('No user found.');
-          }
-        })
-        .catch(error => {
-          alert('Failed to fetch user name.');
         });
     } else {
       alert('User ID not found.');
     }
   };
 
-  const getProductID = () => {
-    const array = product.key.split('');
-    const lastElements = array.slice(-8);
-    const productIDString = lastElements.join('');
-    setProductID(productIDString);
-  };
-
   useEffect(() => {
-    getProductID();
     getUserData();
   }, []);
 
@@ -99,9 +69,9 @@ const ProductDetail = ({route}) => {
         </View>
 
         <View>
-          <Text style={styles.productID}>{productID}</Text>
-          <Text style={styles.comment}>{userName}</Text>
-          <Text style={styles.address}>{address}</Text>
+          <Text style={styles.productID}>{product.key.slice(-8)}</Text>
+          <Text style={styles.comment}>{user.username}</Text>
+          <Text style={styles.address}>{user.address}</Text>
           <Text style={styles.price}>{product?.price} $</Text>
         </View>
       </View>

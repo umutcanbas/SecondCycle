@@ -7,13 +7,13 @@ import {
 
 import React from 'react';
 
-const Button = ({title, onPress, style, loading, textColor}) => {
+const Button = ({title, onPress, buttonStyle, loading, buttonTextColor}) => {
   return (
     <TouchableOpacity
-      style={{...styles.button, ...style}}
+      style={{...styles.button, ...buttonStyle}}
       onPress={onPress}
       disabled={loading}>
-      <Text style={{...styles.text, color: textColor}}>{title}</Text>
+      <Text style={{...styles.text, color: buttonTextColor}}>{title}</Text>
       {loading && (
         <ActivityIndicator
           color="red"

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
@@ -11,6 +11,7 @@ import BackButton from '../../components/Button/BackButton';
 const Address = () => {
   const [user, setUser] = useState('');
   const [userId, setUserId] = useState(null);
+
 
   useEffect(() => {
     const user = auth().currentUser;
@@ -45,13 +46,19 @@ const Address = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Input
-        style={styles.input}
-        placeholder="Enter your address"
-        value={user}
-        onChangeText={setUser}
-      />
-      <Button title="Save Address" onPress={saveAddress} />
+      <BackButton />
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Change Address</Text>
+      </View>
+
+      <View style={styles.content}>
+        <Input
+          placeholder="Enter your new address"
+          value={user}
+          onChangeText={setUser}
+        />
+        <Button title="Save Address" onPress={saveAddress} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -61,14 +68,21 @@ export default Address;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     padding: 16,
+    margin: 10,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    marginBottom: 16,
-    borderRadius: 4,
+  header: {
+    flexDirection: 'row',
+    marginVertical: 150,
+    justifyContent: 'center',
+  },
+  headerText: {
+    fontWeight: 'bold',
+    fontSize: 40,
+    color: 'black',
+  },
+  content: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

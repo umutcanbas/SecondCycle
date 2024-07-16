@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,10 +10,12 @@ import Button from '../../components/Button/Button';
 
 import routes from '../../navigation/routes';
 
+import Products from '../../components/Products/Products';
+
 const Profile = ({navigation}) => {
   const [userId, setUserId] = useState(null);
   const [user, setUser] = useState('');
-  const [userProductCount, setUserProductCount] = useState(0);
+  const [userProducts, setUserProducts] = useState({});
 
   const logOut = async () => {
     try {
@@ -53,14 +55,19 @@ const Profile = ({navigation}) => {
             .ref('/products')
             .orderByChild('userId')
             .equalTo(user.uid);
+
           productRef.on('value', snapshot => {
             if (snapshot.exists()) {
-              setUserProductCount(snapshot.numChildren());
-            } else {
-              setUserProductCount(0);
+              const products = snapshot.val();
+
+              setUserProducts(
+                Object.keys(products).map(key => ({
+                  key,
+                  ...products[key],
+                })),
+              );
             }
           });
-
           return () => {
             productRef.off();
           };
@@ -75,15 +82,31 @@ const Profile = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Profile</Text>
-      <Button title="Address" onPress={goAddress} />
+      <View style={styles.userContainer}>
+        <View style={styles.ımageContainer}>
+          {/* ımage */}
+          <Text>IMAGE</Text>
+        </View>
 
-      <Text>Username: {user.username}</Text>
-      <Text>Products: {userProductCount}</Text>
-
-      <View style={styles.buttonContainer}>
-        <Button title="Log Out" onPress={logOut} textColor="red" />
+        <Text style={styles.userName}>{user.username}</Text>
       </View>
+
+      <Products userProducts={userProducts}>
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Change Address"
+            onPress={goAddress}
+            buttonStyle={styles.button}
+          />
+
+          <Button
+            title="Log Out"
+            onPress={logOut}
+            buttonTextColor="red"
+            buttonStyle={styles.button}
+          />
+        </View>
+      </Products>
     </SafeAreaView>
   );
 };
@@ -94,12 +117,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  userContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  ımageContainer: {
+    backgroundColor: 'blue',
+    width: 300,
+    height: 200,
+    margin: 10,
+  },
+  ımage: {},
+  userName: {
+    fontWeight: 'bold',
+    color: 'grey',
+    fontSize: 22,
+    margin: 5,
+    textTransform: 'uppercase',
+  },
+
   buttonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    right: 125,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    margin: 5,
   },
 });

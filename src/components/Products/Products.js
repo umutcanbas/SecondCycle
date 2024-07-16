@@ -14,9 +14,14 @@ import database from '@react-native-firebase/database';
 import {useNavigation} from '@react-navigation/native';
 import routes from '../../navigation/routes';
 
-const Products = () => {
+const Products = ({userProducts, children}) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (userProducts && Array.isArray(userProducts)) {
+    }
+  }, [userProducts]);
 
   const navigation = useNavigation();
 
@@ -25,6 +30,7 @@ const Products = () => {
       screen: routes.PRODUCT_DETAIL,
       params: {
         product,
+        userProducts
       },
     });
   };
@@ -75,13 +81,16 @@ const Products = () => {
     );
   }
 
+  const data = userProducts ? userProducts : products;
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={products}
+        data={data}
         numColumns={2}
         renderItem={({item}) => <RenderItem item={item} />}
-        keyExtractor={item => item.key}
+        keyExtractor={item =>  item.key}
+        ListFooterComponent={() => children}
       />
     </View>
   );

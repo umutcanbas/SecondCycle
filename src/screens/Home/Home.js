@@ -24,8 +24,8 @@ const Home = () => {
       <Products />
 
       <Button
-        style={styles.modalButton}
-        textColor="white"
+        buttonStyle={styles.modalButton}
+        buttonTextColor="white"
         title="Sell Product"
         onPress={handleInputToggle}
       />

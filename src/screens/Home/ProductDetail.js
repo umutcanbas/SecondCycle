@@ -18,7 +18,7 @@ const ProductDetail = ({route}) => {
 
   const getUserData = () => {
     const userId = product?.userId;
-    
+
     if (userId) {
       database()
         .ref(`/users/${userId}`)

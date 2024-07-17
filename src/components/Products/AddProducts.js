@@ -1,8 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
+
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+
 import Button from '../Button/Button';
+
 import {showMessage} from 'react-native-flash-message';
 
 const AddProducts = ({onClose}) => {

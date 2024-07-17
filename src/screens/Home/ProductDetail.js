@@ -9,12 +9,22 @@ import {
 } from 'react-native';
 import Button from '../../components/Button/Button';
 import BackButton from '../../components/Button/BackButton';
+
 import database from '@react-native-firebase/database';
+import { showMessage } from 'react-native-flash-message';
+
+import SendMessageModal from '../../components/Modal/SendMessageModal';
 
 const ProductDetail = ({route}) => {
   const product = route.params.product;
 
   const [user, setUser] = useState({});
+
+  const [inputModalVisible, setInputModalVisible] = useState(false);
+
+  const handleInputToggle = () => {
+    setInputModalVisible(!inputModalVisible);
+  };
 
   const getUserData = () => {
     const userId = product?.userId;
@@ -28,7 +38,10 @@ const ProductDetail = ({route}) => {
           }
         })
         .catch(error => {
-          alert('Failed to fetch address.');
+          showMessage({
+            message: 'Failed to fetch address',
+            type: 'danger',
+          });
         });
     } else {
       alert('User ID not found.');
@@ -83,8 +96,9 @@ const ProductDetail = ({route}) => {
       <View style={styles.buttonContainer}>
         <Button
           title="Send Message"
-          onPress={() => console.log('MESSAGE SENDED')}
+          onPress={() => handleInputToggle()}
         />
+        <SendMessageModal visible={inputModalVisible} onClose={handleInputToggle} />
       </View>
     </SafeAreaView>
   );

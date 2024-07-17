@@ -55,7 +55,6 @@ const SignUp = ({navigation}) => {
         message: authMessage(error.code),
         type: 'danger',
       });
-      console.log(error)
     } finally {
       setLoading(false);
     }

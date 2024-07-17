@@ -10,6 +10,7 @@ import Input from '../../components/Input';
 import {useNavigation} from '@react-navigation/native';
 import routes from '../../navigation/routes';
 import Header from '../../components/Header';
+import { showMessage } from 'react-native-flash-message';
 
 const Info = () => {
   const [userId, setUserId] = useState(null);
@@ -60,13 +61,22 @@ const Info = () => {
         .update(updates)
         .then(() => {
           navigation.navigate(routes.TAB_NAVIGATOR);
-          alert('User data saved successfully.');
+          showMessage({
+            message: 'Added',
+            type: 'success',
+          });
         })
         .catch(error => {
-          alert('Failed to save user data.');
+          showMessage({
+            message: 'Fail',
+            type: 'danger',
+          });
         });
     } else {
-      alert('User not logged in.');
+      showMessage({
+        message: 'Fail',
+        type: 'danger',
+      });
     }
   };
 

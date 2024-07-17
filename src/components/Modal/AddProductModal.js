@@ -28,9 +28,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     padding: 15,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    height: deviceSize.height / 2.1,
+    borderRadius: 10,
+    height: deviceSize.height / 1.4,
   },
   line: {
     width: 80,

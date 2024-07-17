@@ -7,6 +7,7 @@ import database from '@react-native-firebase/database';
 import Input from '../../components/Input';
 import Button from '../../components/Button/Button';
 import BackButton from '../../components/Button/BackButton';
+import { showMessage } from 'react-native-flash-message';
 
 const Address = () => {
   const [user, setUser] = useState('');
@@ -34,13 +35,22 @@ const Address = () => {
         .ref(`/users/${userId}/address`)
         .set(user)
         .then(() => {
-          alert('Address saved successfully.');
+          showMessage({
+            message: 'Succesful',
+            type: 'success',
+          });
         })
         .catch(error => {
-          alert('Failed to save address.');
+          showMessage({
+            message: 'Fail',
+            type: 'danger',
+          });
         });
     } else {
-      alert('User not logged in.');
+      showMessage({
+        message: 'Fail',
+        type: 'danger',
+      });
     }
   };
 

@@ -3,10 +3,15 @@ import React from 'react';
 
 import SearchIcon from '../assets/svg/searchIcon.svg';
 
-const Searchbar = () => {
+const Searchbar = ({seacrh, setSearch}) => {
   return (
     <View style={styles.container}>
-      <TextInput style={styles.search} placeholder="Search" />
+      <TextInput
+        style={styles.search}
+        placeholder="Search"
+        value={seacrh}
+        onChangeText={setSearch}
+      />
       <TouchableOpacity style={styles.ıcon}>
         <SearchIcon width={25} height={25} />
       </TouchableOpacity>
@@ -20,7 +25,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom:20
+    marginBottom: 20,
   },
   search: {
     backgroundColor: '#E5E5E5',

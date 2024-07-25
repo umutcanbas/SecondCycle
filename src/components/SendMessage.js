@@ -5,6 +5,7 @@ import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 
 import Button from './Button/Button';
+import Input from './Input';
 
 const SendMessage = ({seller}) => {
   const [message, setMessage] = useState('');
@@ -46,7 +47,7 @@ const SendMessage = ({seller}) => {
         </Text>
       </View>
 
-      <TextInput
+      <Input
         placeholder="Send Message"
         value={message}
         onChangeText={setMessage}

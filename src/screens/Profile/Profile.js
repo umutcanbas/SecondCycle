@@ -35,7 +35,7 @@ const Profile = ({navigation}) => {
   };
 
   useEffect(() => {
-    const fetchUserDataAndProductCount = async () => {
+    const fetchUserDataAndProduct = async () => {
       const user = auth().currentUser;
       if (user) {
         setUserId(user.uid);
@@ -77,7 +77,7 @@ const Profile = ({navigation}) => {
       }
     };
 
-    fetchUserDataAndProductCount();
+    fetchUserDataAndProduct();
   }, []);
 
   return (

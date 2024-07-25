@@ -6,8 +6,9 @@ import SendMessage from '../SendMessage';
 
 const deviceSize = Dimensions.get('window');
 
-const SendMessageModal = ({visible, onClose}) => {
-    
+const SendMessageModal = ({visible, onClose , seller}) => {
+
+
   return (
     <Modal
       style={styles.modal}
@@ -19,7 +20,7 @@ const SendMessageModal = ({visible, onClose}) => {
       <View style={styles.container}>
         <View style={styles.line} />
         <View style={styles.input_container}>
-          <SendMessage onClose={onClose} />
+          <SendMessage onClose={onClose} seller={seller}  />
         </View>
       </View>
     </Modal>

@@ -1,19 +1,48 @@
 import {StyleSheet, Text, TextInput, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+
+import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
 
 import Button from './Button/Button';
 
-const SendMessage = () => {
+const SendMessage = ({seller}) => {
   const [message, setMessage] = useState('');
+  const [user, setUser] = useState('');
+
+  useEffect(() => {
+    const fetchUserDataAndProduct = async () => {
+      const user = auth().currentUser;
+      if (user) {
+        setUser(user);
+
+        try {
+          // user
+          const usernameSnapshot = await database()
+            .ref(`/users/${user.uid}`)
+            .once('value');
+          if (usernameSnapshot.exists()) {
+            setUser(usernameSnapshot.val());
+          } else {
+            setUser('No username found');
+          }
+        } catch (error) {
+          console.error('Failed to fetch user data or product count:', error);
+        }
+      }
+    };
+
+    fetchUserDataAndProduct();
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headertext}>
-          Seller : <Text style={styles.sellerText}>ahmet</Text>{' '}
+          Seller : <Text style={styles.sellerText}>{seller.username}</Text>{' '}
         </Text>
         <Text style={styles.headertext}>
-          Buyer : <Text style={styles.buyerText}>ahmet</Text>{' '}
+          Buyer : <Text style={styles.buyerText}>{user.username}</Text>{' '}
         </Text>
       </View>
 

@@ -11,7 +11,7 @@ import Button from '../../components/Button/Button';
 import BackButton from '../../components/Button/BackButton';
 
 import database from '@react-native-firebase/database';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 import SendMessageModal from '../../components/Modal/SendMessageModal';
 
@@ -94,11 +94,12 @@ const ProductDetail = ({route}) => {
       </ScrollView>
 
       <View style={styles.buttonContainer}>
-        <Button
-          title="Send Message"
-          onPress={() => handleInputToggle()}
+        <Button title="Send Message" onPress={() => handleInputToggle()} />
+        <SendMessageModal
+          visible={inputModalVisible}
+          onClose={handleInputToggle}
+          seller={user}
         />
-        <SendMessageModal visible={inputModalVisible} onClose={handleInputToggle} />
       </View>
     </SafeAreaView>
   );

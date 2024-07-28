@@ -21,6 +21,7 @@ const Input = ({value, onChangeText, placeholder, isSecure}) => {
         secureTextEntry={secureText}
         autoCapitalize="none"
         autoCorrect={false}
+     
       />
       {isSecure && (
         <TouchableOpacity onPress={toggleSecureText} style={styles.icon}>
@@ -50,7 +51,8 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 300,
-    marginLeft: 10,
+    height: 35,
+    marginLeft: -1,
   },
   icon: {
     padding: 5,

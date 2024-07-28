@@ -7,24 +7,23 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
+
 import Button from '../../components/Button/Button';
 import BackButton from '../../components/Button/BackButton';
 
 import database from '@react-native-firebase/database';
 import {showMessage} from 'react-native-flash-message';
 
-import SendMessageModal from '../../components/Modal/SendMessageModal';
+import {useNavigation} from '@react-navigation/native';
+import routes from '../../navigation/routes';
 
 const ProductDetail = ({route}) => {
   const product = route.params.product;
+  console.log(product)
 
   const [user, setUser] = useState({});
 
-  const [inputModalVisible, setInputModalVisible] = useState(false);
-
-  const handleInputToggle = () => {
-    setInputModalVisible(!inputModalVisible);
-  };
+  const navigation = useNavigation();
 
   const getUserData = () => {
     const userId = product?.userId;
@@ -94,11 +93,11 @@ const ProductDetail = ({route}) => {
       </ScrollView>
 
       <View style={styles.buttonContainer}>
-        <Button title="Send Message" onPress={() => handleInputToggle()} />
-        <SendMessageModal
-          visible={inputModalVisible}
-          onClose={handleInputToggle}
-          seller={user}
+        <Button
+          title="Send Message"
+          onPress={() =>
+            navigation.navigate(routes.CHATSCREEN, (data = {product}))
+          }
         />
       </View>
     </SafeAreaView>

@@ -11,7 +11,8 @@ export const routes = {
   MESSAGE: 'Message',
   PROFILE: 'Profile',
   PRODUCT_DETAIL: 'ProductDetail',
-  ADDRESS:'Address'
+  ADDRESS:'Address',
+  CHATSCREEN:'ChatScreen'
 };
 
 export default routes;

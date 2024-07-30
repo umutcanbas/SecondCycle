@@ -13,12 +13,31 @@ const AddProducts = ({onClose}) => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
-    const user = auth().currentUser;
-    if (user) {
-      setUserId(user.uid);
-    }
+    const fetchUserData = async () => {
+      const currentUser = auth().currentUser;
+
+      if (currentUser) {
+        setUserId(currentUser.uid);
+
+        try {
+          const usernameSnapshot = await database()
+            .ref(`/users/${currentUser.uid}`)
+            .once('value');
+          if (usernameSnapshot.exists()) {
+            setUserName(usernameSnapshot.val());
+          } else {
+            setUserName('No username found');
+          }
+        } catch (error) {
+          console.error('Failed to fetch user data:', error);
+        }
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   const AddProduct = () => {
@@ -28,6 +47,7 @@ const AddProducts = ({onClose}) => {
         userId,
         description,
         price,
+        userName,
       };
 
       database()

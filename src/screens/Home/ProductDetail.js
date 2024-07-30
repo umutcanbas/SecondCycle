@@ -24,11 +24,6 @@ const ProductDetail = ({route}) => {
 
   const navigation = useNavigation();
 
-
-
-
-  
-
   const getUserData = () => {
     const userId = product?.userId;
     if (userId) {

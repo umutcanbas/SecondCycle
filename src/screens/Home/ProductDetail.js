@@ -19,7 +19,6 @@ import routes from '../../navigation/routes';
 
 const ProductDetail = ({route}) => {
   const product = route.params.product;
-  console.log(product)
 
   const [user, setUser] = useState({});
 

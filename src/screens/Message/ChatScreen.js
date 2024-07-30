@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
 
 import auth from '@react-native-firebase/auth';
@@ -9,22 +9,23 @@ import {showMessage} from 'react-native-flash-message';
 import Button from '../../components/Button/Button';
 
 import BackButton from '../../components/Button/BackButton';
+import Input from '../../components/Input';
 
 const ChatScreen = ({route}) => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [currentUser, setCurrentUser] = useState('');
-  const [message, setMessage] = useState('vvv');
+  const [message, setMessage] = useState('');
+  const [messages, setMessagesList] = useState([]);
 
   const product = route.params.product;
 
-  //current user
+  // Current user data fetch
   useEffect(() => {
     const fetchUserData = async () => {
       const user = auth().currentUser;
       if (user) {
         setCurrentUserId(user.uid);
 
-        //user
         try {
           const usernameSnapshot = await database()
             .ref(`/users/${user.uid}`)
@@ -43,30 +44,58 @@ const ChatScreen = ({route}) => {
     fetchUserData();
   }, []);
 
-  //Message
+  // Fetch existing messagesList
+  useEffect(() => {
+    if (currentUserId) {
+      const fetchMessages = () => {
+        database()
+          .ref(`/messages/${currentUserId}`)
+          .on('value', snapshot => {
+            if (snapshot.exists()) {
+              const data = snapshot.val();
+              const messageList = Object.keys(data).map(key => ({
+                id: key,
+                ...data[key],
+              }));
+              setMessagesList(messageList);
+            }
+          });
+      };
 
-  const SendMessage = () => {
+      fetchMessages();
+
+      return () => {
+        database()
+          .ref(`/messages/${currentUserId}`)
+          .off('value', fetchMessages);
+      };
+    }
+  }, [currentUserId]);
+
+  // Send Message
+  const sendMessage = () => {
     if (currentUserId && product && message) {
-      const newProduct = {
-        user: {currentUserId, currentUser},
+      const newMessage = {
         product,
         message,
+        currentUser,
       };
 
       database()
-        .ref('/messages')
-        .push(newProduct)
+        .ref(`/messages/${currentUserId}`)
+        .push(newMessage)
         .then(() => {
           showMessage({
-            message: 'send',
+            message: 'Message sent',
             type: 'success',
           });
+          setMessage('');
         })
         .catch(error => {
-          console.log(error);
+          console.log('Failed to send message:', error);
         });
     } else {
-      console.log('error');
+      console.log('Message sending error: Missing data');
     }
   };
 
@@ -82,9 +111,24 @@ const ChatScreen = ({route}) => {
         <Text style={styles.detailText}>{product.price}$</Text>
       </View>
 
-      <Button title={'ahahaha'} onPress={() => SendMessage()} />
+      <FlatList
+        data={messages}
+        renderItem={({item}) => (
+          <View style={styles.messageContainer}>
+            <Text style={styles.messageText}>{item.message}</Text>
+            <Text style={styles.messageUser}>{item.currentUser.username}</Text>
+          </View>
+        )}
+        keyExtractor={item => item.id}
+      />
 
-      {/* mesajlar */}
+      <Input
+        placeholder="Send Message"
+        value={message}
+        onChangeText={setMessage}
+      />
+
+      <Button title={'Send Message'} onPress={sendMessage} />
     </SafeAreaView>
   );
 };
@@ -95,6 +139,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    margin: 10,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -114,5 +159,18 @@ const styles = StyleSheet.create({
   detailText: {
     fontWeight: '600',
     fontSize: 22,
+  },
+  messageContainer: {
+    backgroundColor: '#f1f1f1',
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5,
+  },
+  messageText: {
+    fontSize: 16,
+  },
+  messageUser: {
+    fontSize: 12,
+    color: 'gray',
   },
 });

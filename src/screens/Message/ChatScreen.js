@@ -11,13 +11,15 @@ import Button from '../../components/Button/Button';
 import BackButton from '../../components/Button/BackButton';
 import Input from '../../components/Input';
 
-const ChatScreen = ({route}) => {
+const ChatScreen = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
-  const [currentUser, setCurrentUser] = useState('');
+  const [currentUserName, setCurrentUserName] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessagesList] = useState([]);
 
-  const product = route.params.product;
+/*   const product = route.params.product; */
+
+  // item.product.key == params.item.key gibi bişi gelcek
 
   // Current user data fetch
   useEffect(() => {
@@ -26,14 +28,15 @@ const ChatScreen = ({route}) => {
       if (user) {
         setCurrentUserId(user.uid);
 
+        //current user name
         try {
           const usernameSnapshot = await database()
             .ref(`/users/${user.uid}`)
             .once('value');
           if (usernameSnapshot.exists()) {
-            setCurrentUser(usernameSnapshot.val());
+            setCurrentUserName(usernameSnapshot.val());
           } else {
-            setCurrentUser('No username found');
+            setCurrentUserName('No username found');
           }
         } catch (error) {
           console.error('Failed to fetch user data:', error);
@@ -78,7 +81,7 @@ const ChatScreen = ({route}) => {
       const newMessage = {
         product,
         message,
-        currentUser,
+        currentUser: currentUserName,
       };
 
       database()
@@ -107,8 +110,8 @@ const ChatScreen = ({route}) => {
       </View>
 
       <View style={styles.detailContainer}>
-        <Text style={styles.detailText}>{product.name}</Text>
-        <Text style={styles.detailText}>{product.price}$</Text>
+  {/*       <Text style={styles.detailText}>{product.name}</Text>
+        <Text style={styles.detailText}>{product.price}$</Text> */}
       </View>
 
       <FlatList

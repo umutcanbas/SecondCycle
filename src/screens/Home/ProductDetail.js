@@ -37,7 +37,7 @@ const ProductDetail = ({route}) => {
         })
         .catch(error => {
           showMessage({
-            message: 'Failed to fetch address',
+            message: 'Faill',
             type: 'danger',
           });
         });
@@ -52,9 +52,9 @@ const ProductDetail = ({route}) => {
 
   if (!product) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.errorText}>Product data not found.</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -67,7 +67,7 @@ const ProductDetail = ({route}) => {
       />
 
       <View style={styles.header}>
-        <Text style={styles.product}>{product?.name}</Text>
+        <Text style={styles.product}>{product?.productName}</Text>
       </View>
 
       <View style={styles.content}>
@@ -76,13 +76,15 @@ const ProductDetail = ({route}) => {
           <Text style={styles.title}>Seller Name</Text>
           <Text style={styles.title}>Location</Text>
           <Text style={styles.title}>Price</Text>
+          <Text style={styles.title}>Phone Number</Text>
         </View>
 
         <View>
-          <Text style={styles.productID}>{product.key.slice(-8)}</Text>
-          <Text style={styles.comment}>{user.username}</Text>
-          <Text style={styles.address}>{user.address}</Text>
+          <Text style={styles.productID}>{product?.id.slice(-8)}</Text>
+          <Text style={styles.comment}>{user?.name}</Text>
+          <Text style={styles.comment}>{user?.address}</Text>
           <Text style={styles.price}>{product?.price} $</Text>
+          <Text style={styles.comment}>{user?.phone}</Text>
         </View>
       </View>
 
@@ -95,7 +97,7 @@ const ProductDetail = ({route}) => {
         <Button
           title="Send Message"
           onPress={() =>
-            navigation.navigate(routes.CHATSCREEN, (data = {product}))
+            navigation.navigate(routes.CHATSCREEN, {data: product})
           }
         />
       </View>
@@ -153,12 +155,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: 'green',
-    margin: 5,
-  },
-  address: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: 'black',
     margin: 5,
   },
   detailContainer: {

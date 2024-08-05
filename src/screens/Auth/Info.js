@@ -10,12 +10,13 @@ import Input from '../../components/Input';
 import {useNavigation} from '@react-navigation/native';
 import routes from '../../navigation/routes';
 import Header from '../../components/Header';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 const Info = () => {
   const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState('');
+  const [name, setName] = useState('');
   const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
 
   const navigation = useNavigation();
 
@@ -23,42 +24,22 @@ const Info = () => {
     const user = auth().currentUser;
     if (user) {
       setUserId(user.uid);
-      database()
-        .ref(`/users/${user.uid}`)
-        .once('value')
-        .then(snapshot => {
-          const userData = snapshot.val();
-          if (userData) {
-            if (userData.address && userData.username) {
-              navigation.navigate(routes.TAB_NAVIGATOR);
-            } else {
-              if (userData.address) {
-                setAddress(userData.address);
-              }
-              if (userData.username) {
-                setUserName(userData.username);
-              }
-            }
-          }
-        });
+
+      /* navigation.navigate(routes.TAB_NAVIGATOR); */
     }
   }, [navigation]);
 
   const saveUserData = () => {
     if (userId) {
-      const updates = {};
-
-      if (address) {
-        updates[`/users/${userId}/address`] = address;
-      }
-
-      if (userName) {
-        updates[`/users/${userId}/username`] = userName;
-      }
-
+      const user = {
+        name,
+        address,
+        phone,
+      };
       database()
-        .ref()
-        .update(updates)
+        .ref(`/users`)
+        .child(userId)
+        .set(user)
         .then(() => {
           navigation.navigate(routes.TAB_NAVIGATOR);
           showMessage({
@@ -89,14 +70,20 @@ const Info = () => {
       <Input
         style={styles.input}
         placeholder="Enter your user name"
-        value={userName}
-        onChangeText={setUserName}
+        value={name}
+        onChangeText={setName}
       />
       <Input
         style={styles.input}
         placeholder="Enter your address"
         value={address}
         onChangeText={setAddress}
+      />
+      <Input
+        style={styles.input}
+        placeholder="Enter your Phone Number"
+        value={phone}
+        onChangeText={setPhone}
       />
       <Button title="Save User Data" onPress={saveUserData} />
     </SafeAreaView>

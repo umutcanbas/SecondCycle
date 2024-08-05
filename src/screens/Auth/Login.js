@@ -36,7 +36,7 @@ const Login = ({navigation}) => {
         });
         AsyncStorage.setItem('isLogged', 'true');
 
-        navigation.navigate(routes.INFO);
+        navigation.navigate(routes.TAB_NAVIGATOR);
       })
       .catch(error => {
         showMessage({

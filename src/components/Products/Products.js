@@ -8,70 +8,91 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-
 import database from '@react-native-firebase/database';
 
 import {useNavigation} from '@react-navigation/native';
 import routes from '../../navigation/routes';
 
+import parseContentData from '../../utils/parseContentData';
+
+
 const Products = ({userProducts, children}) => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+
+
+
+  useEffect(() => {
+    const onValueChange = database()
+      .ref('/products')
+      .on('value', snapshot => {
+        const obj = snapshot.val();
+
+        if (obj) {
+          const productsData = Object.values(obj)
+            .map(productList => Object.values(parseContentData(productList)))
+            .flat();
+
+          database()
+            .ref('/users')
+            .once('value')
+            .then(userSnapshot => {
+              const users = userSnapshot.val();
+              const productsWithUsernames = productsData.map(product => ({
+                ...product,
+                username: users[product.userId]
+                  ? users[product.userId].name
+                  : 'Unknown',
+              }));
+              setProducts(productsWithUsernames);
+            });
+        } else {
+          setProducts([]);
+        }
+      });
+
+    return () => {
+      database().ref('/products').off('value', onValueChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (userProducts && Array.isArray(userProducts)) {
+      setProducts(userProducts);
     }
   }, [userProducts]);
-
-  const navigation = useNavigation();
 
   const goProductDetails = product => {
     navigation.navigate(routes.WITH_OUT_TAB, {
       screen: routes.PRODUCT_DETAIL,
       params: {
         product,
-        userProducts
       },
     });
   };
 
-  const RenderItem = ({item}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => goProductDetails(item)}
-        activeOpacity={0.6}
-        style={styles.productContainer}>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.image}
-            source={require('../../assets/png/ProductDefault.png')}
-          />
-        </View>
+  const data = userProducts ? userProducts : products;
 
-        <Text style={styles.productName}>{item.name}</Text>
-        <Text style={styles.userName}>{item.username}</Text>
-        <Text style={styles.price}>$ {item.price}</Text>
-      </TouchableOpacity>
-    );
-  };
 
-  useEffect(() => {
-    const onValueChange = database()
-      .ref('/products')
-      .on('value', snapshot => {
-        const productsList = [];
-        snapshot.forEach(childSnapshot => {
-          productsList.push({
-            key: childSnapshot.key,
-            ...childSnapshot.val(),
-          });
-        });
-        setProducts(productsList);
-        setLoading(false);
-      });
+  const RenderItem = ({item}) => (
+    <TouchableOpacity
+      onPress={() => goProductDetails(item)}
+      activeOpacity={0.6}
+      style={styles.productContainer}>
+      <View style={styles.imageContainer}>
+        <Image
+          style={styles.image}
+          source={require('../../assets/png/ProductDefault.png')}
+        />
+      </View>
 
-    return () => database().ref('/products').off('value', onValueChange);
-  }, []);
+      <Text style={styles.productName}>{item.productName}</Text>
+      <Text style={styles.userName}>{item.username}</Text>
+      <Text style={styles.price}>$ {item.price}</Text>
+    </TouchableOpacity>
+  );
+
 
   if (loading) {
     return (
@@ -81,15 +102,13 @@ const Products = ({userProducts, children}) => {
     );
   }
 
-  const data = userProducts ? userProducts : products;
-
   return (
     <View style={styles.container}>
       <FlatList
         data={data}
         numColumns={2}
         renderItem={({item}) => <RenderItem item={item} />}
-        keyExtractor={item =>  item.key}
+        keyExtractor={(item, index) => `${item.userId}-${index}`}
         ListFooterComponent={() => children}
       />
     </View>

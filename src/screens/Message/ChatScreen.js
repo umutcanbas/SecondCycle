@@ -11,15 +11,15 @@ import Button from '../../components/Button/Button';
 import BackButton from '../../components/Button/BackButton';
 import Input from '../../components/Input';
 
-const ChatScreen = () => {
+const ChatScreen = ({route}) => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [currentUserName, setCurrentUserName] = useState('');
   const [message, setMessage] = useState('');
-  const [messages, setMessagesList] = useState([]);
+  const [messages, setMessages] = useState([]);
 
-/*   const product = route.params.product; */
+  const product = route.params.data;
 
-  // item.product.key == params.item.key gibi bişi gelcek
+  const messagePath = `/${currentUserId}-sep-${product.userId}`;
 
   // Current user data fetch
   useEffect(() => {
@@ -52,16 +52,16 @@ const ChatScreen = () => {
     if (currentUserId) {
       const fetchMessages = () => {
         database()
-          .ref(`/messages/${currentUserId}`)
+          .ref(`/messages/`)
           .on('value', snapshot => {
-            if (snapshot.exists()) {
-              const data = snapshot.val();
-              const messageList = Object.keys(data).map(key => ({
-                id: key,
-                ...data[key],
-              }));
-              setMessagesList(messageList);
-            }
+            const messages = snapshot.val();
+            if (messages === null) return setMessages([]);
+
+            const userMessagesKey = Object.keys(messages).filter(item =>
+              item.includes(currentUserId),
+            );
+            const userMessages = messages[userMessagesKey];
+            setMessages(userMessages);
           });
       };
 
@@ -77,15 +77,14 @@ const ChatScreen = () => {
 
   // Send Message
   const sendMessage = () => {
-    if (currentUserId && product && message) {
+    if (message) {
       const newMessage = {
-        product,
         message,
-        currentUser: currentUserName,
       };
 
       database()
-        .ref(`/messages/${currentUserId}`)
+        .ref('/messages')
+        .child(messagePath)
         .push(newMessage)
         .then(() => {
           showMessage({
@@ -109,17 +108,14 @@ const ChatScreen = () => {
         <Text style={styles.headerText}>Send Message</Text>
       </View>
 
-      <View style={styles.detailContainer}>
-  {/*       <Text style={styles.detailText}>{product.name}</Text>
-        <Text style={styles.detailText}>{product.price}$</Text> */}
-      </View>
+      <View style={styles.detailContainer}></View>
 
       <FlatList
         data={messages}
         renderItem={({item}) => (
           <View style={styles.messageContainer}>
             <Text style={styles.messageText}>{item.message}</Text>
-            <Text style={styles.messageUser}>{item.currentUser.username}</Text>
+            {/*  <Text style={styles.messageUser}>{item.currentUser.username}</Text> */}
           </View>
         )}
         keyExtractor={item => item.id}

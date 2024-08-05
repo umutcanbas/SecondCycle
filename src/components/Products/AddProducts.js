@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, TextInput, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 
 import Button from '../Button/Button';
+import Input from '../Input';
 
 import {showMessage} from 'react-native-flash-message';
 
@@ -13,45 +14,27 @@ const AddProducts = ({onClose}) => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
       const currentUser = auth().currentUser;
-
-      if (currentUser) {
-        setUserId(currentUser.uid);
-
-        try {
-          const usernameSnapshot = await database()
-            .ref(`/users/${currentUser.uid}`)
-            .once('value');
-          if (usernameSnapshot.exists()) {
-            setUserName(usernameSnapshot.val());
-          } else {
-            setUserName('No username found');
-          }
-        } catch (error) {
-          console.error('Failed to fetch user data:', error);
-        }
-      }
+      setUserId(currentUser.uid);
     };
 
     fetchUserData();
   }, []);
 
   const AddProduct = () => {
-    if (productName && description && price && userId) {
+    if (productName && description && price) {
       const newProduct = {
-        name: productName,
-        userId,
+        productName,
         description,
         price,
-        userName,
+        userId,
       };
 
       database()
-        .ref('/products')
+        .ref(`/products/${userId}`)
         .push(newProduct)
         .then(() => {
           setProductName('');
@@ -78,20 +61,20 @@ const AddProducts = ({onClose}) => {
   };
 
   return (
-    <View contentContainerStyle={styles.container}>
-      <TextInput
+    <View style={styles.container}>
+      <Input
         placeholder="Product Name"
         value={productName}
         onChangeText={setProductName}
         style={styles.input}
       />
-      <TextInput
+      <Input
         placeholder="Description"
         value={description}
         onChangeText={setDescription}
         style={{...styles.input, height: 70}}
       />
-      <TextInput
+      <Input
         placeholder="Price"
         value={price}
         onChangeText={setPrice}

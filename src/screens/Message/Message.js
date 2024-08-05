@@ -76,7 +76,7 @@ const Message = () => {
   }, [currentUserId]);
 
   const renderMessage = ({item}) => {
-    /* console.log(JSON.stringify(item, null, 2)) */
+     console.log(JSON.stringify(item, null, 2)) 
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate(routes.WITH_OUT_TAB,{
@@ -84,7 +84,7 @@ const Message = () => {
         })}
         activeOpacity={0.6}
         style={styles.messageContainer}>
-        <Text style={styles.messageText}>{item.product.name}</Text>
+        <Text style={styles.messageText}>{item.product}</Text>
       </TouchableOpacity>
     );
   };
